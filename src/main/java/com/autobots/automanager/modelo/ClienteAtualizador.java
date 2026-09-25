@@ -1,7 +1,11 @@
 package com.autobots.automanager.modelo;
 
-import com.autobots.automanager.entidades.Cliente;
+import org.springframework.stereotype.Component;
 
+import com.autobots.automanager.entidades.Cliente;
+import com.autobots.automanager.entidades.Endereco;
+
+@Component 
 public class ClienteAtualizador {
 	private StringVerificadorNulo verificador = new StringVerificadorNulo();
 	private EnderecoAtualizador enderecoAtualizador = new EnderecoAtualizador();
@@ -25,6 +29,9 @@ public class ClienteAtualizador {
 
 	public void atualizar(Cliente cliente, Cliente atualizacao) {
 		atualizarDados(cliente, atualizacao);
+		if (atualizacao.getEndereco() != null && cliente.getEndereco() == null) {
+			cliente.setEndereco(new Endereco());
+		}
 		enderecoAtualizador.atualizar(cliente.getEndereco(), atualizacao.getEndereco());
 		documentoAtualizador.atualizar(cliente.getDocumentos(), atualizacao.getDocumentos());
 		telefoneAtualizador.atualizar(cliente.getTelefones(), atualizacao.getTelefones());

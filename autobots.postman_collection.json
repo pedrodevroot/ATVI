@@ -1,0 +1,161 @@
+{
+  "info": {
+    "name": "AutoBots - Cadastro de Cliente",
+    "description": "Microsservico de CRUD de clientes do AutoBots. Base: http://localhost:18080",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:18080", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1 - Caminhos felizes",
+      "item": [
+        {
+          "name": "GET listar todos os clientes  [200]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/cliente/clientes", "host": ["{{baseUrl}}"], "path": ["cliente", "clientes"] }
+          }
+        },
+        {
+          "name": "GET cliente por id  [200]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/cliente/1", "host": ["{{baseUrl}}"], "path": ["cliente", "1"] }
+          }
+        },
+        {
+          "name": "POST cadastrar simples  [201 + Location]",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/cliente/cadastro", "host": ["{{baseUrl}}"], "path": ["cliente", "cadastro"] }
+          }
+        },
+        {
+          "name": "POST cadastrar completo  [201 + Location]",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Joana Ferreira de Souza\",\n  \"nomeSocial\": \"Joana\",\n  \"dataNascimento\": \"1995-08-20T00:00:00.000+00:00\",\n  \"documentos\": [\n    { \"tipo\": \"RG\", \"numero\": \"998877\" },\n    { \"tipo\": \"CPF\", \"numero\": \"12345678901\" }\n  ],\n  \"endereco\": {\n    \"estado\": \"Sao Paulo\",\n    \"cidade\": \"Santos\",\n    \"bairro\": \"Gonzaga\",\n    \"rua\": \"Avenida Ana Costa\",\n    \"numero\": \"250\",\n    \"codigoPostal\": \"11060002\",\n    \"informacoesAdicionais\": \"Apartamento 32\"\n  },\n  \"telefones\": [\n    { \"ddd\": \"13\", \"numero\": \"981234567\" },\n    { \"ddd\": \"13\", \"numero\": \"32221100\" }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/cliente/cadastro", "host": ["{{baseUrl}}"], "path": ["cliente", "cadastro"] }
+          }
+        },
+        {
+          "name": "PUT atualizar parcial  [200]",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"nomeSocial\": \"Dom Pedro I\",\n  \"endereco\": {\n    \"codigoPostal\": \"11015200\"\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/cliente/atualizar", "host": ["{{baseUrl}}"], "path": ["cliente", "atualizar"] }
+          }
+        },
+        {
+          "name": "DELETE excluir cliente  [204]",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/cliente/excluir/2", "host": ["{{baseUrl}}"], "path": ["cliente", "excluir", "2"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 - Erros tratados",
+      "item": [
+        {
+          "name": "GET id inexistente  [404]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/cliente/999", "host": ["{{baseUrl}}"], "path": ["cliente", "999"] }
+          }
+        },
+        {
+          "name": "PUT sem id  [400]",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Sem Id\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/cliente/atualizar", "host": ["{{baseUrl}}"], "path": ["cliente", "atualizar"] }
+          }
+        },
+        {
+          "name": "PUT id inexistente  [404]",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 999,\n  \"nome\": \"Fantasma\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/cliente/atualizar", "host": ["{{baseUrl}}"], "path": ["cliente", "atualizar"] }
+          }
+        },
+        {
+          "name": "DELETE id inexistente  [404]",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/cliente/excluir/999", "host": ["{{baseUrl}}"], "path": ["cliente", "excluir", "999"] }
+          }
+        },
+        {
+          "name": "POST documento duplicado  [409]",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Documento Repetido\",\n  \"documentos\": [\n    { \"tipo\": \"RG\", \"numero\": \"1500\" }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/cliente/cadastro", "host": ["{{baseUrl}}"], "path": ["cliente", "cadastro"] }
+          }
+        },
+        {
+          "name": "POST com id (nao deve sobrescrever)  [201 novo]",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"nome\": \"Tentativa de Sobrescrever\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/cliente/cadastro", "host": ["{{baseUrl}}"], "path": ["cliente", "cadastro"] }
+          }
+        },
+        {
+          "name": "GET rota antiga duplicada (nao deve existir)  [404]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/cliente/cliente/1", "host": ["{{baseUrl}}"], "path": ["cliente", "cliente", "1"] }
+          }
+        }
+      ]
+    }
+  ]
+}

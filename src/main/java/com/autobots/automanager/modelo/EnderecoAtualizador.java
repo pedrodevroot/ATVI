@@ -6,7 +6,7 @@ public class EnderecoAtualizador {
 	private StringVerificadorNulo verificador = new StringVerificadorNulo();
 
 	public void atualizar(Endereco endereco, Endereco atualizacao) {
-		if (atualizacao != null) {
+		if (atualizacao != null && endereco != null) {
 			if (!verificador.verificar(atualizacao.getEstado())) {
 				endereco.setEstado(atualizacao.getEstado());
 			}

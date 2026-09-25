@@ -1,8 +1,12 @@
 package com.autobots.automanager.controles;
 
+import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,47 +16,50 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.autobots.automanager.conversores.ClienteConversor;
+import com.autobots.automanager.dtos.ClienteAtualizacaoDto;
+import com.autobots.automanager.dtos.ClienteCadastroDto;
+import com.autobots.automanager.dtos.ClienteRespostaDto;
 import com.autobots.automanager.entidades.Cliente;
-import com.autobots.automanager.modelo.ClienteAtualizador;
-import com.autobots.automanager.modelo.ClienteSelecionador;
-import com.autobots.automanager.repositorios.ClienteRepositorio;
+import com.autobots.automanager.servicos.ClienteServico;
 
 @RestController
 @RequestMapping("/cliente")
 public class ClienteControle {
-	@Autowired
-	private ClienteRepositorio repositorio;
-	@Autowired
-	private ClienteSelecionador selecionador;
 
-	@GetMapping("/{id}")
-	public Cliente obterCliente(@PathVariable long id) {
-		List<Cliente> clientes = repositorio.findAll();
-		return selecionador.selecionar(clientes, id);
-	}
+    @Autowired
+    private ClienteServico servico;
+    @Autowired
+    private ClienteConversor conversor;
 
-	@GetMapping("/clientes")
-	public List<Cliente> obterClientes() {
-		List<Cliente> clientes = repositorio.findAll();
-		return clientes;
-	}
+    @GetMapping("/{id}")
+    public ResponseEntity<ClienteRespostaDto> obterCliente(@PathVariable long id) {
+        return ResponseEntity.ok(conversor.paraResposta(servico.obterPorId(id)));
+    }
 
-	@PostMapping("/cadastro")
-	public void cadastrarCliente(@RequestBody Cliente cliente) {
-		repositorio.save(cliente);
-	}
+    @GetMapping("/clientes")
+    public ResponseEntity<List<ClienteRespostaDto>> obterClientes() {
+        return ResponseEntity.ok(conversor.paraResposta(servico.listar()));
+    }
 
-	@PutMapping("/atualizar")
-	public void atualizarCliente(@RequestBody Cliente atualizacao) {
-		Cliente cliente = repositorio.getById(atualizacao.getId());
-		ClienteAtualizador atualizador = new ClienteAtualizador();
-		atualizador.atualizar(cliente, atualizacao);
-		repositorio.save(cliente);
-	}
+    @PostMapping("/cadastro")
+    public ResponseEntity<ClienteRespostaDto> cadastrarCliente(
+            @Valid @RequestBody ClienteCadastroDto dto) {
+        Cliente cadastrado = servico.cadastrar(conversor.paraEntidade(dto));
+        return ResponseEntity.created(URI.create("/cliente/" + cadastrado.getId()))
+                .body(conversor.paraResposta(cadastrado));
+    }
 
-	@DeleteMapping("/excluir")
-	public void excluirCliente(@RequestBody Cliente exclusao) {
-		Cliente cliente = repositorio.getById(exclusao.getId());
-		repositorio.delete(cliente);
-	}
+    @PutMapping("/atualizar")
+    public ResponseEntity<ClienteRespostaDto> atualizarCliente(
+            @Valid @RequestBody ClienteAtualizacaoDto dto) {
+        Cliente atualizado = servico.atualizar(conversor.paraEntidade(dto));
+        return ResponseEntity.ok(conversor.paraResposta(atualizado));
+    }
+
+    @DeleteMapping("/excluir/{id}")
+    public ResponseEntity<Void> excluirCliente(@PathVariable long id) {
+        servico.excluir(id);
+        return ResponseEntity.noContent().build();
+    }
 }
