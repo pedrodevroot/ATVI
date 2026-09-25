@@ -41,7 +41,7 @@ public class AutomanagerApplication {
 			cliente.setDataNascimento(calendario.getTime());
 			cliente.setNomeSocial("Dom Pedro");
 			
-			Telefone telefone = new Telefone();
+			var telefone = new Telefone();
 			telefone.setDdd("21");
 			telefone.setNumero("981234576");
 			cliente.getTelefones().add(telefone);

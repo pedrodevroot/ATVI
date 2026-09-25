@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 @Entity
 public class Telefone {
-	@Id()
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column

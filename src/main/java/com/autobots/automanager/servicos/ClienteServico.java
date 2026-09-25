@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.excecoes.RecursoNaoEncontradoException;
 import com.autobots.automanager.modelo.ClienteAtualizador;
-import com.autobots.automanager.modelo.ClienteSelecionador;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
 
 @Service
@@ -18,8 +17,6 @@ public class ClienteServico {
 
     @Autowired
     private ClienteRepositorio repositorio;
-    @Autowired
-    private ClienteSelecionador selecionador;
     @Autowired
     private ClienteAtualizador atualizador;
 
@@ -40,12 +37,8 @@ public class ClienteServico {
     }
 
     public Cliente obterPorId(long id) {
-        List<Cliente> clientes = repositorio.findAll();
-        Cliente cliente = selecionador.selecionar(clientes, id);
-        if (cliente == null) {
-            throw new RecursoNaoEncontradoException("Cliente", id);
-        }
-        return cliente;
+        return repositorio.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Cliente", id));
     }
 
     @Transactional

@@ -2,8 +2,11 @@ package com.autobots.automanager.modelo;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.autobots.automanager.entidades.Telefone;
 
+@Component
 public class TelefoneAtualizador {
 	private StringVerificadorNulo verificador = new StringVerificadorNulo();
 
