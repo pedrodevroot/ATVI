@@ -1,16 +1,12 @@
 package com.autobots.automanager.dtos;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lombok.Data;
 
 @Data
-public class EnderecoDto {
-
-    @NotNull(message = "O id do endereco e obrigatorio para atualizacao")
-    private Long id;
+public class EnderecoAtualizacaoDto {
 
     @Size(max = 255, message = "O estado deve ter no maximo 255 caracteres")
     private String estado;

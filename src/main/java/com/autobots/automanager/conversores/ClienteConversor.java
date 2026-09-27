@@ -28,8 +28,8 @@ public class ClienteConversor {
         cliente.setNomeSocial(dto.getNomeSocial());
         cliente.setDataNascimento(dto.getDataNascimento());
 
-        if (dto.getEndereco() != null) {
-            cliente.setEndereco(paraEndereco(dto.getEndereco()));
+        for (EnderecoCadastroDto endereco : dto.getEnderecos()) {
+            cliente.getEnderecos().add(paraEndereco(endereco));
         }
         for (DocumentoCadastroDto documento : dto.getDocumentos()) {
             cliente.getDocumentos().add(paraDocumento(documento));
@@ -47,8 +47,10 @@ public class ClienteConversor {
         cliente.setNomeSocial(dto.getNomeSocial());
         cliente.setDataNascimento(dto.getDataNascimento());
 
-        if (dto.getEndereco() != null) {
-            cliente.setEndereco(paraEndereco(dto.getEndereco()));
+        for (EnderecoDto endereco : dto.getEnderecos()) {
+            Endereco entidade = paraEndereco(endereco);
+            entidade.setId(endereco.getId());
+            cliente.getEnderecos().add(entidade);
         }
         for (DocumentoDto documento : dto.getDocumentos()) {
             Documento entidade = paraDocumento(documento);
@@ -71,8 +73,8 @@ public class ClienteConversor {
         dto.setDataNascimento(cliente.getDataNascimento());
         dto.setDataCadastro(cliente.getDataCadastro());
 
-        if (cliente.getEndereco() != null) {
-            dto.setEndereco(paraEnderecoDto(cliente.getEndereco()));
+        for (Endereco endereco : cliente.getEnderecos()) {
+            dto.getEnderecos().add(paraEnderecoDto(endereco));
         }
         for (Documento documento : cliente.getDocumentos()) {
             dto.getDocumentos().add(paraDocumentoDto(documento));

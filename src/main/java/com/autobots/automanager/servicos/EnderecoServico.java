@@ -1,5 +1,7 @@
 package com.autobots.automanager.servicos;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,46 +9,53 @@ import org.springframework.transaction.annotation.Transactional;
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Endereco;
 import com.autobots.automanager.excecoes.RecursoNaoEncontradoException;
+import com.autobots.automanager.modelo.EnderecoAtualizador;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
+import com.autobots.automanager.repositorios.EnderecoRepositorio;
 
 @Service
 public class EnderecoServico {
 
     @Autowired
+    private EnderecoRepositorio repositorio;
+    @Autowired
     private ClienteRepositorio clienteRepositorio;
+    @Autowired
+    private EnderecoAtualizador atualizador;
 
-    public Endereco obterPorCliente(long clienteId) {
-        Endereco endereco = obterCliente(clienteId).getEndereco();
-        if (endereco == null) {
-            throw new RecursoNaoEncontradoException(mensagemAusente(clienteId));
-        }
-        return endereco;
+    public List<Endereco> listarPorCliente(long clienteId) {
+        return obterCliente(clienteId).getEnderecos();
     }
 
     @Transactional
-    public Endereco definir(long clienteId, Endereco endereco) {
+    public Endereco criar(long clienteId, Endereco endereco) {
         Cliente cliente = obterCliente(clienteId);
         endereco.setId(null);
-        cliente.setEndereco(endereco);
-        return clienteRepositorio.save(cliente).getEndereco();
+        Endereco criado = repositorio.save(endereco);
+        cliente.getEnderecos().add(criado);
+        clienteRepositorio.save(cliente);
+        return criado;
+    }
+
+    public Endereco obterPorId(long id) {
+        return repositorio.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Endereco", id));
     }
 
     @Transactional
-    public void excluir(long clienteId) {
-        Cliente cliente = obterCliente(clienteId);
-        if (cliente.getEndereco() == null) {
-            throw new RecursoNaoEncontradoException(mensagemAusente(clienteId));
-        }
-        cliente.setEndereco(null);
-        clienteRepositorio.save(cliente);
+    public Endereco atualizar(long id, Endereco atualizacao) {
+        Endereco endereco = obterPorId(id);
+        atualizador.atualizar(endereco, atualizacao);
+        return repositorio.save(endereco);
+    }
+
+    @Transactional
+    public void excluir(long id) {
+        repositorio.delete(obterPorId(id));
     }
 
     private Cliente obterCliente(long clienteId) {
         return clienteRepositorio.findById(clienteId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Cliente", clienteId));
-    }
-
-    private String mensagemAusente(long clienteId) {
-        return "O cliente de id " + clienteId + " nao possui endereco cadastrado";
     }
 }

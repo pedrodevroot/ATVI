@@ -28,7 +28,7 @@ public class ClienteCadastroDto {
     private List<DocumentoCadastroDto> documentos = new ArrayList<>();
 
     @Valid
-    private EnderecoCadastroDto endereco;
+    private List<EnderecoCadastroDto> enderecos = new ArrayList<>();
 
     @Valid
     private List<TelefoneCadastroDto> telefones = new ArrayList<>();

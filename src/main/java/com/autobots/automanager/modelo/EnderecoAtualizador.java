@@ -1,7 +1,12 @@
 package com.autobots.automanager.modelo;
 
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import com.autobots.automanager.entidades.Endereco;
 
+@Component
 public class EnderecoAtualizador {
 	private StringVerificadorNulo verificador = new StringVerificadorNulo();
 
@@ -27,6 +32,18 @@ public class EnderecoAtualizador {
 			}
 			if (!verificador.verificar(atualizacao.getInformacoesAdicionais())) {
 				endereco.setInformacoesAdicionais(atualizacao.getInformacoesAdicionais());
+			}
+		}
+	}
+
+	public void atualizar(List<Endereco> enderecos, List<Endereco> atualizacoes) {
+		for (Endereco atualizacao : atualizacoes) {
+			for (Endereco endereco : enderecos) {
+				if (atualizacao.getId() != null) {
+					if (atualizacao.getId().equals(endereco.getId())) {
+						atualizar(endereco, atualizacao);
+					}
+				}
 			}
 		}
 	}

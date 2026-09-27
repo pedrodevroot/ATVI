@@ -30,7 +30,7 @@ public class ClienteAtualizacaoDto {
     private List<DocumentoDto> documentos = new ArrayList<>();
 
     @Valid
-    private EnderecoDto endereco;
+    private List<EnderecoDto> enderecos = new ArrayList<>();
 
     @Valid
     private List<TelefoneDto> telefones = new ArrayList<>();

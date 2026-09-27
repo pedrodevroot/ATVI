@@ -12,7 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 
 import lombok.Data;
 
@@ -32,11 +32,15 @@ public class Cliente {
 	private Date dataCadastro;
 	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "cliente_id")
+	@OrderBy("id")
 	private List<Documento> documentos = new ArrayList<>();
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	private Endereco endereco;
 	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "cliente_id")
+	@OrderBy("id")
+	private List<Endereco> enderecos = new ArrayList<>();
+	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+	@JoinColumn(name = "cliente_id")
+	@OrderBy("id")
 	private List<Telefone> telefones = new ArrayList<>();
 
 }

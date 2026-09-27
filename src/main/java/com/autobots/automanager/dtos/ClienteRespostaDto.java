@@ -14,6 +14,6 @@ public class ClienteRespostaDto {
     private Date dataNascimento;
     private Date dataCadastro;
     private List<DocumentoDto> documentos = new ArrayList<>();
-    private EnderecoDto endereco;
+    private List<EnderecoDto> enderecos = new ArrayList<>();
     private List<TelefoneDto> telefones = new ArrayList<>();
 }
